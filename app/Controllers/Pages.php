@@ -143,17 +143,59 @@ class Pages extends BaseController
         $cycleModel = model(CycleModel::class);
         $parcoursModel = model(ParcoursModel::class);
         $centreExamenModel = model(CentreExamenModel::class);
-        $diplomeType = model(DiplomeTypeModel::class);
+        $nationaliteModel = model(NationaliteModel::class);
 
+        if($this->request->getMethod() == 'POST'){
+            $candidatModel = model(CandidatModel::class);
+            $diplomeModel = model(DiplomeModel::class);
+
+            $errors = [];
+            $candidatData = [
+                'nom' => $this->request->getPost('nom'),
+                'prenom' => $this->request->getPost('prenom'),
+                'date_naissance' => $this->request->getPost('date_naissance'),
+                'lieu_naissance' => $this->request->getPost('lieu_naissance'),
+                'departement_id' => $this->request->getPost('departement_id'),
+                'nationalite_id' => $this->request->getPost('nationalite_id'),
+                'parcours_id' => $this->request->getPost('parcours_id'),
+                'centre_examen_id' => $this->request->getPost('centre_examen_id'),
+                'compte_id' => $this->session->get('compte')['id']
+            ];
+            $candidat_id = $candidatModel->insert($candidatData);
+            if(!$candidat_id){
+                array_push($errors, ...$candidatModel->getValidationMessages());
+            }else{
+                $diplomeData = [
+                    'type_diplome_id' => $this->request->getPost('type_diplome_id'),
+                    'annee_obtention' => $this->request->getPost('annee_obtention'),
+                    'etablissement' => $this->request->getPost('etablissement'),
+                    'candidat_id' => $candidat_id
+                ];
+                
+                $diplome_id = $diplomeModel->insert($diplomeData);
+                if(!$diplome_id){
+                    array_push($errors, ...$diplomeModel->getValidationMessages());
+                }else{
+                    $this->session->setFlashdata("success", "Enregistrement reuissi");
+                    return view('templates/header', $headerData)
+                        .view('templates/reussi')
+                        .view('templates/footer');
+
+                }
+            }
+        
+        }
         $data = [
             'regions' => $regionModel->select('id, nom')->findAll(),
             'cycles' => $cycleModel->findAll(),
             'centres' => $centreExamenModel->findAll(),
             'departementsRegion' => $regionModel->findAllWithDepartements(),
             'parcours' => $parcoursModel->findAll(),
-            'diplomeType' => $cycleModel->findAllWithDiplomeTypes()
+            'diplomeType' => $cycleModel->findAllWithDiplomeTypes(),
+            'nationalites' => $nationaliteModel->findAll()
         ];
 
+        
         return view('templates/header', $headerData)
             .view('pages/concour', $data)
             .view('templates/footer');

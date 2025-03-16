@@ -13,7 +13,8 @@
     <main class="bg-gray-100 p-4 md:p-6 mb-12">
 
        
-            <form class="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6 space-y-8">
+            <form method="post" class="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6 space-y-8">
+                <?= csrf_field()?>
                 <!-- Section 1: Information candidat -->
                 <div class="bg-gray-50 p-6 rounded-lg">
                     <h2 class="text-xl font-bold mb-6 text-blue-600">1. Information sur le candidat</h2>
@@ -21,30 +22,33 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium mb-2">Nom</label>
-                            <input type="text" class="w-full p-2 border rounded-md" required>
+                            <input name="nom" type="text" class="w-full p-2 border rounded-md" required>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-2">Prénom</label>
-                            <input type="text" class="w-full p-2 border rounded-md" required>
+                            <input name="prenom" type="text" class="w-full p-2 border rounded-md">
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-2">Date de naissance</label>
-                            <input type="date" class="w-full p-2 border rounded-md" required>
+                            <input name="date_naissance" type="date" class="w-full p-2 border rounded-md" required>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-2">Lieu de naissance</label>
-                            <input type="text" class="w-full p-2 border rounded-md" required>
+                            <input name="lieu_naissance" type="text" class="w-full p-2 border rounded-md" required>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-2">Nationalité</label>
-                            <select id="nationalite" class="w-full p-2 border rounded-md" required>
+                            <select name="nationalite_id" id="nationalite" class="w-full p-2 border rounded-md" required>
                                 <option value="">Sélectionner</option>
-                                <option>Camerounais</option>
-                                <option>Etranger</option>
+                                <?php foreach ($nationalites as $nationalite): ?>
+                                <option value="<?=$nationalite['id'] ?>">
+                                    <?=$nationalite['nom'] ?>
+                                </option> 
+                                <?php endforeach; ?>
                             </select>
                         </div>
 
@@ -62,7 +66,7 @@
 
                         <div>
                             <label class="block text-sm font-medium mb-2">Département</label>
-                            <select id="departement" class="w-full p-2 border rounded-md" disabled required>
+                            <select name="departement_id" id="departement" class="w-full p-2 border rounded-md" disabled required>
                                 <option value="">Sélectionnez d'abord une région</option>
                             </select>
                         </div>
@@ -76,7 +80,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium mb-2">Cycle</label>
-                            <select name="cycle" id="cycle" class="w-full p-2 border rounded-md" required>
+                            <select name="cycle_id" id="cycle" class="w-full p-2 border rounded-md" required>
                                 <option value="">Sélectionner</option>
                                 <?php foreach ($cycles as $cycle): ?>
                                 <option value="<?=$cycle['id'] ?>">
@@ -107,19 +111,19 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-sm font-medium mb-2">Type de diplôme</label>
-                            <select id="diplome_type" class="w-full p-2 border rounded-md" required>
+                            <select name="type_diplome_id" id="diplome_type" class="w-full p-2 border rounded-md" required>
                                 <option value="">Sélectionner d'abord un cycle</option>
                             </select>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-2">Établissement</label>
-                            <input type="text" class="w-full p-2 border rounded-md" required>
+                            <input name="etablissement" type="text" class="w-full p-2 border rounded-md" required>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-2">Année d'obtention</label>
-                            <input type="number" min="2000" max="2024" class="w-full p-2 border rounded-md" required>
+                            <input name="annee_obtention" type="number" min="2000" max="2024" class="w-full p-2 border rounded-md" required>
                         </div>
                     </div>
                 </div>
@@ -141,7 +145,14 @@
                         </div>
                     </div>
                 </div>
-
+                <?php
+                    $errors = session()->getFlashdata('errors');
+                    if(isset($errors)){
+                        foreach($errors as $error){
+                            echo '<p class="text-red-500">' .$error.'</p>';
+                        }
+                    }
+                ?>
                 <button type="submit"
                     class="w-full bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition">
                     Soumettre l'inscription
