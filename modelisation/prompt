@@ -1,0 +1,20 @@
+Je veux un template de formulaire HTML/tailwindcss et JS si necessaire responsive mobile first  organise plusieurs sous partie contenant des titre
+1- Informantion sur le candidat
+    - input:nom : text
+    - input:prenom: text
+    - input:date_naissance: date
+    - input:lieu_naissance: text
+    - select:nationalite # les valeurs possible sont : "Camerounais", "Etranger"
+    - select:region # plusieurs valeurs possibles mais pour le developpement tu pourras mettre region1, region2, ..., region11
+    - select:departement  #Ici il y'aura besoin un peu de logique cas c'est en fonction de la region choisir qu'on affiche les departements a selectione
+
+2- Information sur la formation
+    - select:cycle # liste les cycles qui sont "Niveau 1" et "Niveau 2"
+    - select:parcours # correspond au parcours qui repesente les filiere
+3- Information sur le diplome du candidat
+    - select:diplome_type # qui dependra du cycle selectionne cas pour chaque cycle il y'a les diplome
+    - input:etablissement : text # etablissement qui a delivre le diplome
+    - input:annee_obtention number # annee obtention du diplome
+4- Lieu concour
+    -select:centre_examen # qui est la liste des centre d'examen
+NB: les informations des selects seront remplir a partir des donnee envyoer dans la vue par le controller mais nous allons juste nous concentrer sur sur le templates html.

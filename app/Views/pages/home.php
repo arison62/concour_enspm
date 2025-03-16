@@ -22,7 +22,7 @@
             <button
                 class="rounded bg-blue-800 
                     text-white px-4 py-2 hover:bg-blue-950">
-                <a href="<?= base_url("connexion") ?>">
+                <a href="<?= base_url("concour") ?>">
                     Commecer l'inscription
                 </a>
             </button>
